@@ -4,7 +4,7 @@ var fs = require('fs');
 var split = require('split');
 const readline = require('readline');
 
-function geojsonStreamMerge(inputFile, outputFile, callback) {
+function geojsonStreamMerge(inputFile, outputFile, callback, log=true) {
     if (!inputFile) {
         console.log('\nUsage: node index.js --input <path to line delimited GeoJSON FeatureCollections>\n');
 
@@ -26,8 +26,10 @@ function geojsonStreamMerge(inputFile, outputFile, callback) {
     var line = 0;
     inputStream.on('data', function (chunk) {
         line = line + 1;
-        readline.cursorTo(process.stderr, 0);
-        process.stderr.write('Processing line: ' + String(line));
+        if(log) {
+            readline.cursorTo(process.stderr, 0);
+            process.stderr.write('Processing line: ' + String(line));
+        }
         if (chunk) {
             var json = JSON.parse(chunk);
             if (json.features) {
